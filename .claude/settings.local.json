@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(New-Item *)",
+      "PowerShell(Write-Output \"== public/ ==\"; Get-ChildItem \"public\" -Recurse -File | ForEach-Object { $_.FullName.Replace\\(\"$PWD\\\\\", \"\"\\) }; Write-Output \"== root files ==\"; Get-ChildItem -Force -File | Select-Object -ExpandProperty Name; Write-Output \"== root dirs ==\"; Get-ChildItem -Force -Directory | Select-Object -ExpandProperty Name)",
+      "PowerShell(pnpm build *)"
+    ]
+  }
+}

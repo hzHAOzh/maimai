@@ -1,0 +1,4 @@
+{
+  // 继承 Nuxt 自动生成的 tsconfig（首次运行 `pnpm run dev` 后由 nuxt prepare 生成）
+  "extends": "./.nuxt/tsconfig.json"
+}

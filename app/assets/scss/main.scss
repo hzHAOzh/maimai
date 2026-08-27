@@ -1,0 +1,11 @@
+// ============================================================
+// 入口样式文件 —— 引入所有 SCSS 分区
+// 分区顺序：variables / mixins → base → utilities → components → pages
+// ============================================================
+
+@use 'variables';
+@use 'mixins';
+@use 'base';
+@use 'utilities';
+@use 'components';
+@use 'pages';

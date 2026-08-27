@@ -1,0 +1,29 @@
+{
+  "name": "maimai-3d-ip-resume",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "3D-IP 交互式个人简历 / 作品集官网（Nuxt 3 + Vue 3 + TypeScript + SCSS）",
+  "packageManager": "pnpm@10.6.5",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "@nuxt/icon": "^1.10.3",
+    "@nuxt/image": "^1.9.0",
+    "gsap": "^3.12.7"
+  },
+  "devDependencies": {
+    "@iconify-json/mdi": "^1.2.1",
+    "@types/node": "^22.10.2",
+    "nuxt": "^3.15.0",
+    "sass-embedded": "^1.83.0",
+    "typescript": "^5.7.2",
+    "vue-tsc": "^2.2.0"
+  }
+}

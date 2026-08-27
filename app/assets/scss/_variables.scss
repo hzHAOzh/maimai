@@ -1,0 +1,54 @@
+// ============================================================
+// 变量 —— 颜色 / 字体 / 尺寸 / 断点 / 阴影
+// 集中在这里调整即可影响全站
+// ============================================================
+
+// ---- 品牌色（科技蓝紫）----
+$brand-50:  #eef2ff;
+$brand-100: #e0e7ff;
+$brand-200: #c7d2fe;
+$brand-300: #a5b4fc;
+$brand-400: #818cf8;
+$brand-500: #6366f1;
+$brand-600: #4f46e5;
+$brand-700: #4338ca;
+$brand-800: #3730a3;
+$brand-900: #312e81;
+
+// ---- 中性色 / 背景 / 文字 ----
+$color-bg:         #f7f7fb;  // 页面背景
+$color-surface:    #ffffff;  // 卡片 / 面板背景
+$color-text:       #16181d;  // 主文字
+$color-text-soft:  #52525b;  // 次级文字（neutral-600）
+$color-text-muted: #6b7280;  // 弱化文字（neutral-500）
+$color-text-faint: #a1a1aa;  // 更弱文字（neutral-400）
+
+// ---- 边框（半透明黑）----
+$border-soft:   rgba(0, 0, 0, 0.05);
+$border-normal: rgba(0, 0, 0, 0.10);
+$border-strong: rgba(0, 0, 0, 0.15);
+
+// ---- 字体 ----
+$font-sans:    'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+$font-display: 'Space Grotesk', 'Inter', 'PingFang SC', sans-serif;
+$font-mono:    'JetBrains Mono', 'Menlo', monospace;
+
+// ---- 尺寸 ----
+$container-max: 72rem;  // 内容最大宽度（原 max-w-6xl）
+$radius-sm:    0.5rem;  // 8px
+$radius-md:    0.75rem; // 12px
+$radius-lg:    1rem;    // 16px
+$radius-xl:    1.5rem;  // 24px
+$radius-full:  9999px;
+
+// ---- 断点 ----
+$bp-sm: 640px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;
+
+// ---- 阴影 ----
+$shadow-sm:    0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md:    0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+$shadow-lg:    0 10px 25px -5px rgba(0, 0, 0, 0.10), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+$shadow-brand: 0 10px 20px -5px rgba($brand-500, 0.30);
