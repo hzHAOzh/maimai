@@ -1,26 +1,39 @@
 <script setup lang="ts">
 // ============================================================
-// NavBar —— 固定顶部导航栏（参考 tutti.sh）
+// NavBar —— 固定顶部导航栏（单页锚点导航）
 // 白色圆角胶囊浮动条：左品牌 / 中导航 / 右操作区（联系 + 悬浮二维码）。
-// 悬浮于深色/浅色背景之上，滚动仅增强阴影；移动端折叠为抽屉。
+// 点击导航平滑滚动到对应模块；滚动时高亮当前所在模块（scrollspy）。
 // ============================================================
 
-// 导航项（中部链接，按需增删）
+// 导航项（对应单页模块锚点）
 const navItems = [
-  { label: "首页", to: "/" },
-  { label: "关于我", to: "/about" },
-  { label: "技能栈", to: "/skills" },
-  { label: "经历", to: "/experience" },
+  { label: "首页", anchor: "#home" },
+  { label: "关于我", anchor: "#about" },
+  { label: "技能栈", anchor: "#skills" },
+  { label: "经历", anchor: "#experience" },
 ];
 
-const route = useRoute();
+// 单页模块 id（用于 scrollspy 判定）
+const sectionIds = ["home", "about", "skills", "experience", "contact"];
 
 // 是否已滚动（用于增强导航栏阴影）
 const scrolled = ref(false);
 const menuOpen = ref(false);
+const activeAnchor = ref("#home");
 
 function onScroll() {
   scrolled.value = window.scrollY > 24;
+
+  // scrollspy：最后一个顶部进入视口的模块为当前模块
+  const offset = 140;
+  let current = "home";
+  for (const id of sectionIds) {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= offset) {
+      current = id;
+    }
+  }
+  activeAnchor.value = `#${current}`;
 }
 
 onMounted(() => {
@@ -29,45 +42,47 @@ onMounted(() => {
 });
 onUnmounted(() => window.removeEventListener("scroll", onScroll));
 
-// 路由切换时自动关闭移动端菜单
-watch(
-  () => route.path,
-  () => {
-    menuOpen.value = false;
-  },
-);
+// 点击导航后关闭移动端菜单（滚动交给原生锚点 + 全局 smooth）
+function onNavigate() {
+  menuOpen.value = false;
+}
 
-// 判断当前路由是否激活（首页精确匹配，其它前缀匹配）
-function isActive(to: string) {
-  return route.path === to || (to !== "/" && route.path.startsWith(to));
+// 判断当前模块是否激活
+function isActive(anchor: string) {
+  return activeAnchor.value === anchor;
 }
 </script>
 
 <template>
   <header class="navbar" :class="{ 'navbar--scrolled': scrolled }">
     <nav class="container-page navbar__inner">
-      <!-- 左侧：品牌文字 -->
-      <NuxtLink to="/" class="navbar__logo"> MAIMAI </NuxtLink>
+      <!-- 左侧：品牌文字，点击回到顶部 -->
+      <a href="#home" class="navbar__logo" @click="onNavigate"> MAIMAI </a>
 
       <!-- 中间：桌面端导航链接 -->
       <ul class="navbar__links">
-        <li v-for="item in navItems" :key="item.to">
-          <NuxtLink
-            :to="item.to"
+        <li v-for="item in navItems" :key="item.anchor">
+          <a
+            :href="item.anchor"
             class="navbar__link"
-            :class="{ 'navbar__link--active': isActive(item.to) }"
+            :class="{ 'navbar__link--active': isActive(item.anchor) }"
+            @click="onNavigate"
           >
             {{ item.label }}
-          </NuxtLink>
+          </a>
         </li>
       </ul>
 
       <!-- 右侧：桌面端操作区（联系 + 悬浮二维码） -->
       <div class="navbar__actions">
         <div class="navbar__contact">
-          <NuxtLink to="/contact" class="navbar__cta-btn navbar__cta-btn--ink">
+          <a
+            href="#contact"
+            class="navbar__cta-btn navbar__cta-btn--ink"
+            @click="onNavigate"
+          >
             联系
-          </NuxtLink>
+          </a>
 
           <div class="navbar__contact-pop">
             <span class="navbar__qr"></span>
@@ -91,21 +106,26 @@ function isActive(to: string) {
     <Transition name="drawer">
       <div v-if="menuOpen" class="navbar__drawer">
         <ul class="container-page navbar__drawer-list">
-          <li v-for="item in navItems" :key="item.to">
-            <NuxtLink
-              :to="item.to"
+          <li v-for="item in navItems" :key="item.anchor">
+            <a
+              :href="item.anchor"
               class="navbar__drawer-link"
-              :class="{ 'navbar__drawer-link--active': isActive(item.to) }"
+              :class="{ 'navbar__drawer-link--active': isActive(item.anchor) }"
+              @click="onNavigate"
             >
               {{ item.label }}
-            </NuxtLink>
+            </a>
           </li>
         </ul>
 
         <div class="container-page navbar__drawer-cta">
-          <NuxtLink to="/contact" class="navbar__cta-btn navbar__cta-btn--ink">
+          <a
+            href="#contact"
+            class="navbar__cta-btn navbar__cta-btn--ink"
+            @click="onNavigate"
+          >
             联系
-          </NuxtLink>
+          </a>
         </div>
       </div>
     </Transition>

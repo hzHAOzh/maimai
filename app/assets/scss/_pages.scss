@@ -1,5 +1,5 @@
-@use 'variables' as *;
-@use 'mixins' as *;
+@use "variables" as *;
+@use "mixins" as *;
 
 // ============================================================
 // 页面级样式
@@ -9,16 +9,9 @@
 .hero-section {
   position: relative;
   min-height: 100vh;
+  min-height: 100svh;
   padding-top: 5.5rem;
   padding-bottom: 2.5rem;
-}
-
-.hero-section__eyebrow {
-  margin-bottom: 1.5rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  color: $color-text-faint;
 }
 
 .hero-stage {
@@ -26,6 +19,7 @@
   display: grid;
   align-items: center;
   min-height: calc(100vh - 10rem);
+  min-height: calc(100svh - 8rem);
   grid-template-columns: 1fr;
   gap: 1.5rem;
 
@@ -42,7 +36,7 @@
     margin: 0;
     width: min(100%, 70rem);
     font-family: $font-display;
-    font-size: clamp(4.5rem, 14vw, 9rem);
+    font-size: clamp(4.5rem, min(14vw, 9vh), 9rem);
     font-weight: 700;
     line-height: 0.88;
     letter-spacing: 0.04em;
@@ -64,7 +58,7 @@
     max-width: 18rem;
     justify-self: start;
     align-self: center;
-    padding-top: 4rem;
+    padding-top: 2rem;
     text-align: left;
   }
 
@@ -109,7 +103,8 @@
   }
 
   &__figure {
-    width: min(100%, 34rem);
+    width: min(100%, 34rem, calc((100vh - 8rem) * 0.8));
+    width: min(100%, 34rem, calc((100svh - 8rem) * 0.8));
     margin-inline: auto;
     padding-top: 3rem;
   }
@@ -118,7 +113,7 @@
     justify-self: end;
     align-self: end;
     width: min(100%, 16rem);
-    padding-bottom: 4rem;
+    padding-bottom: 2rem;
   }
 }
 
@@ -148,7 +143,7 @@
 
 @include lg {
   .hero-stage__meta {
-    transform: translateY(2rem);
+    transform: translateY(1rem);
   }
 }
 
@@ -160,13 +155,13 @@
 
 @media (max-width: $bp-lg) {
   .hero-stage {
-    padding-top: 5rem;
+    padding-top: 4rem;
     text-align: center;
 
     &__title {
       top: 1rem;
       width: 100%;
-      font-size: clamp(3.5rem, 16vw, 6.5rem);
+      font-size: clamp(3rem, 15vw, 5rem);
     }
 
     &__intro,
@@ -184,12 +179,13 @@
 
     &__figure {
       order: 1;
-      padding-top: 4.5rem;
+      width: min(100%, 22rem);
+      padding-top: 3.5rem;
     }
 
     &__meta {
       order: 3;
-      padding-bottom: 2rem;
+      padding-bottom: 1.5rem;
     }
 
     &__tags {
@@ -211,17 +207,14 @@
   }
 }
 
-.hero-scroll-hint {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  color: $color-text-faint;
-  animation: bounce 1.5s infinite;
-}
-
 @keyframes bounce {
-  0%, 100% { transform: translate(-50%, 0); }
-  50%      { transform: translate(-50%, -8px); }
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, -8px);
+  }
 }
 
 // ---------- 关于我 ----------
@@ -237,8 +230,12 @@
   gap: 1.5rem;
   margin-top: 3rem;
 
-  @include sm { grid-template-columns: repeat(2, 1fr); }
-  @include lg { grid-template-columns: repeat(3, 1fr); }
+  @include sm {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @include lg {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .info-card {
@@ -263,8 +260,12 @@
   gap: 1.5rem;
   margin-top: 2.5rem;
 
-  @include sm { grid-template-columns: repeat(2, 1fr); }
-  @include lg { grid-template-columns: repeat(4, 1fr); }
+  @include sm {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @include lg {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 // ---------- 经历（时间轴） ----------
@@ -276,7 +277,9 @@
   &__item {
     position: relative;
 
-    & + & { margin-top: 2rem; }
+    & + & {
+      margin-top: 2rem;
+    }
   }
 
   &__dot {
@@ -306,3 +309,57 @@
   }
 }
 
+// ---------- 锚点滚动留白（避免被固定导航遮挡）----------
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+// ---------- 联系 ----------
+.contact-section {
+  min-height: 70vh;
+  display: grid;
+  place-content: center;
+  text-align: center;
+
+  &__panel {
+    display: grid;
+    place-items: center;
+    gap: 0.875rem;
+    margin-top: 2.5rem;
+    padding: 2.5rem;
+    border: 1px solid $border-soft;
+    border-radius: $radius-lg;
+    background: $color-surface;
+  }
+
+  &__qr {
+    width: 12rem;
+    height: 12rem;
+    border: 1px solid $border-normal;
+    border-radius: $radius-md;
+    background-color: #fff;
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+    background-size: 0.875rem 0.875rem;
+  }
+
+  &__qr-label {
+    font-size: 0.9375rem;
+    color: $color-text-muted;
+  }
+
+  &__email {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: $brand-600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
