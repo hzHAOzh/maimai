@@ -15,12 +15,14 @@ const frameDir = config.public.ipFrameDir as string;
 
 // ---- 首屏 Hero ----
 const introTags = ["独立创作者", "交互体验", "视觉作品"];
-const profileItems = [
-  { label: "姓名", value: "大暑会" },
-  { label: "职业", value: "创意开发 / 设计探索" },
-  { label: "风格", value: "3D IP / 作品展示 / 轻交互" },
-  { label: "地区", value: "上海" },
-];
+const hero = {
+  kicker: "你好 / HELLO",
+  name: "大暑会",
+  role: "创意开发 / 设计探索",
+  summary:
+    "热衷于 3D 形象、轻交互与信息排版。把技术当作表达媒介，让作品像人物一样有性格。",
+  now: { kicker: "NOW", title: "3D IP / 轻交互", desc: "正在创作探索…" },
+};
 
 // ---- 关于我 ----
 const aboutTags = ["前端工程", "3D 交互动效", "Nuxt", "Vue", "TypeScript"];
@@ -99,42 +101,50 @@ useSectionReveal();
   <!-- #home：首屏 Hero -->
   <section id="home" class="container-page hero-section hero-section--home">
     <div class="hero-stage">
-      <h1 class="hero-stage__title" aria-label="MAIMAI">MAIMAI</h1>
+      <!-- 背景装饰：超大标题水印 -->
+      <span class="hero-stage__watermark" aria-hidden="true">MAIMAI</span>
 
+      <!-- 左：信息栏 -->
       <aside data-reveal class="hero-stage__intro">
-        <p class="hero-stage__kicker">你好 / HELLO</p>
-        <h2 class="hero-stage__name">大暑会</h2>
-        <p class="hero-stage__summary">
-          这里是首页首屏展示区，主打 3D
-          形象、轻交互与个人信息排版。整体布局会贴近设计稿的杂志式构图。
+        <p class="hero-stage__kicker">
+          <span class="hero-stage__kicker-dot" aria-hidden="true" />
+          {{ hero.kicker }}
         </p>
+        <h1 class="hero-stage__name">
+          Hi, 我是<span class="hero-stage__name-accent">{{ hero.name }}</span>
+        </h1>
+        <p class="hero-stage__role">{{ hero.role }}</p>
+
+        <p class="hero-stage__summary">{{ hero.summary }}</p>
+
         <ul class="hero-stage__tags" aria-label="首页标签">
           <li v-for="tag in introTags" :key="tag" class="hero-stage__tag">
             {{ tag }}
           </li>
         </ul>
+
+        <div class="hero-stage__actions">
+          <a href="/resume.pdf" class="btn btn--primary" download>下载简历</a>
+          <a href="#contact" class="btn btn--outline">联系我</a>
+        </div>
       </aside>
 
+      <!-- 右：人物视频 -->
       <div data-reveal class="hero-stage__figure">
-        <HeroBanner
-          :src="ipAssets.heroIntro"
-          :wave-src="ipAssets.heroWave"
-          aspect-ratio="4 / 5"
-        />
-      </div>
+        <div class="hero-stage__disc">
+          <HeroBanner
+            :src="ipAssets.heroIntro"
+            :wave-src="ipAssets.heroWave"
+            aspect-ratio="4 / 5"
+          />
+        </div>
 
-      <aside data-reveal class="hero-stage__meta">
-        <dl class="hero-meta">
-          <div
-            v-for="item in profileItems"
-            :key="item.label"
-            class="hero-meta__item"
-          >
-            <dt class="hero-meta__label">{{ item.label }}</dt>
-            <dd class="hero-meta__value">{{ item.value }}</dd>
-          </div>
-        </dl>
-      </aside>
+        <div class="hero-stage__now">
+          <span class="hero-stage__now-kicker">{{ hero.now.kicker }}</span>
+          <strong class="hero-stage__now-title">{{ hero.now.title }}</strong>
+          <span class="hero-stage__now-desc">{{ hero.now.desc }}</span>
+        </div>
+      </div>
     </div>
   </section>
 

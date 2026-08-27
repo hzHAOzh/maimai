@@ -1,4 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+// —— 部署基础路径：GitHub Pages 项目页（https://<user>.github.io/<repo>/）等子路径部署时，
+//    通过环境变量 NUXT_APP_BASE_URL 覆盖（如 /maimai/）。根路径部署默认 "/" 无需改动。——
+const baseURL = process.env.NUXT_APP_BASE_URL || "/";
+const withBase = (p: string) =>
+  baseURL === "/" ? p : `${baseURL.replace(/\/$/, "")}${p}`;
+
 export default defineNuxtConfig({
   // —— 版本兼容日期（锁定 Nuxt 行为，设为最新日期即可）——
   compatibilityDate: '2026-08-27',
@@ -48,6 +55,7 @@ export default defineNuxtConfig({
 
   // —— 应用全局配置 ——
   app: {
+    baseURL,
     head: {
       htmlAttrs: { lang: 'zh-CN' }, // 浅色主题
       title: '麦锐玲 | 个人简历',
@@ -68,7 +76,8 @@ export default defineNuxtConfig({
   // —— 运行时公共配置：素材路径集中管理，替换素材只需改这里 ——
   runtimeConfig: {
     public: {
-      // 3D-IP 透明背景视频素材（对应 public/media/ip/）
+      // 3D-IP 透明背
+      // 景视频素材（对应 public/media/ip/）
       ipAssets: {
         heroIntro: '/media/ip/hero-intro.webm', // 首屏开屏动画
         heroWave: '/media/ip/hero-wave.webm',   // 鼠标悬浮挥手动画

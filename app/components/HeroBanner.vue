@@ -147,7 +147,6 @@ onUnmounted(() => observer?.disconnect())
         :src="currentSrc"
         :poster="poster"
         muted
-        loop
         playsinline
         preload="auto"
         class="hero__video"
