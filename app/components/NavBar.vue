@@ -85,7 +85,12 @@ function isActive(anchor: string) {
           </a>
 
           <div class="navbar__contact-pop">
-            <span class="navbar__qr"></span>
+            <img
+              src="/images/wechat.png"
+              alt="微信二维码"
+              loading="lazy"
+              class="navbar__qr"
+            />
             <span class="navbar__qr-label">扫码加微信</span>
           </div>
         </div>
