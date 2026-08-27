@@ -6,19 +6,14 @@
 // ============================================================
 
 const config = useRuntimeConfig();
-const ipAssets = config.public.ipAssets as {
-  heroIntro: string;
-  heroWave: string;
-  heroIdle: string;
-};
 const frameDir = config.public.ipFrameDir as string;
 
 // ---- 首屏 Hero ----
 const introTags = ["独立创作者", "交互体验", "视觉作品"];
 const hero = {
   kicker: "你好 / HELLO",
-  name: "大暑会",
-  role: "创意开发 / 设计探索",
+  name: "麦锐玲",
+  role: "AI创作 / 新媒体运营",
   summary:
     "热衷于 3D 形象、轻交互与信息排版。把技术当作表达媒介，让作品像人物一样有性格。",
   now: { kicker: "NOW", title: "3D IP / 轻交互", desc: "正在创作探索…" },
@@ -129,13 +124,15 @@ useSectionReveal();
         </div>
       </aside>
 
-      <!-- 右：人物视频 -->
+      <!-- 右：人物图片 -->
       <div data-reveal class="hero-stage__figure">
         <div class="hero-stage__disc">
-          <HeroBanner
-            :src="ipAssets.heroIntro"
-            :wave-src="ipAssets.heroWave"
-            aspect-ratio="4 / 5"
+          <img
+            class="hero-stage__img"
+            src="/media/ip/ip.png"
+            alt="麦锐玲"
+            width="720"
+            height="900"
           />
         </div>
 

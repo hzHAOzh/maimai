@@ -162,10 +162,11 @@
       rgba(255, 255, 255, 0)
     );
 
-    // 让人物画面贴近圆形（视频以 contain 居中）
-    :deep(.hero__frame) {
+    // 让人物画面贴近圆形（图片以 contain 居中）
+    .hero-stage__img {
       width: 78%;
-      aspect-ratio: 1;
+      height: auto;
+      object-fit: contain;
     }
   }
 
