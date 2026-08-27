@@ -22,6 +22,17 @@ body {
   line-height: 1.6;
   color: $color-text;
   background-color: $color-bg;
+  // 设计稿马卡龙渐变：顶部粉紫 → 中部浅黄 → 底部浅蓝
+  background-image: linear-gradient(
+    180deg,
+    #f6e7f4 0%,       // 粉紫（顶部）
+    #f7e8f2 12%,
+    #faf3de 38%,      // 浅黄（中部）
+    #eef3f0 60%,
+    #dcebf3 82%,      // 浅蓝（底部）
+    #dbeaf2 100%
+  );
+  background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

@@ -148,7 +148,7 @@
     width: min(100%, 30rem);
   }
 
-  // 圆形展示盘（视频外圈光晕 / 渐变底）
+  // 圆形展示盘（人物圆底，设计稿薄荷青绿渐变）
   &__disc {
     position: relative;
     aspect-ratio: 1;
@@ -156,10 +156,11 @@
     place-items: center;
     border-radius: $radius-full;
     background: radial-gradient(
-      circle at 50% 40%,
-      rgba($brand-300, 0.35),
-      rgba($brand-100, 0.15) 55%,
-      rgba(255, 255, 255, 0)
+      circle at 50% 45%,
+      #e7f3f5 0%,
+      #d9edf1 36%,
+      rgba(216, 240, 238, 0.55) 58%,
+      rgba(255, 255, 255, 0) 78%
     );
 
     // 让人物画面贴近圆形（图片以 contain 居中）
@@ -204,6 +205,64 @@
   &__now-desc {
     font-size: 0.75rem;
     color: $color-text-muted;
+  }
+}
+
+// 漂浮泡泡（设计稿装饰）
+.hero-bubble {
+  position: absolute;
+  z-index: 0;
+  border-radius: $radius-full;
+  background: radial-gradient(
+    circle at 32% 30%,
+    rgba(255, 255, 255, 0.85),
+    rgba(255, 255, 255, 0.25) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  animation: bubble-float 9s ease-in-out infinite;
+
+  &--1 {
+    top: 18%;
+    left: 6%;
+    width: 3.5rem;
+    height: 3.5rem;
+    animation-delay: 0s;
+  }
+
+  &--2 {
+    top: 12%;
+    left: 44%;
+    width: 1.75rem;
+    height: 1.75rem;
+    animation-delay: 2.5s;
+  }
+
+  &--3 {
+    top: 55%;
+    right: 4%;
+    width: 4.5rem;
+    height: 4.5rem;
+    animation-delay: 5s;
+  }
+
+  &--4 {
+    bottom: 16%;
+    left: 28%;
+    width: 1.25rem;
+    height: 1.25rem;
+    animation-delay: 1s;
+  }
+}
+
+@keyframes bubble-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
   }
 }
 

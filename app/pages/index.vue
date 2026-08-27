@@ -99,15 +99,19 @@ useSectionReveal();
       <!-- 背景装饰：超大标题水印 -->
       <span class="hero-stage__watermark" aria-hidden="true">MAIMAI</span>
 
+      <!-- 背景装饰：漂浮泡泡 -->
+      <span class="hero-bubble hero-bubble--1" aria-hidden="true" />
+      <span class="hero-bubble hero-bubble--2" aria-hidden="true" />
+      <span class="hero-bubble hero-bubble--3" aria-hidden="true" />
+      <span class="hero-bubble hero-bubble--4" aria-hidden="true" />
+
       <!-- 左：信息栏 -->
       <aside data-reveal class="hero-stage__intro">
         <p class="hero-stage__kicker">
           <span class="hero-stage__kicker-dot" aria-hidden="true" />
           {{ hero.kicker }}
         </p>
-        <h1 class="hero-stage__name">
-          Hi, 我是<span class="hero-stage__name-accent">{{ hero.name }}</span>
-        </h1>
+        <h1 class="hero-stage__name">Hi, 我是{{ hero.name }}</h1>
         <p class="hero-stage__role">{{ hero.role }}</p>
 
         <p class="hero-stage__summary">{{ hero.summary }}</p>
