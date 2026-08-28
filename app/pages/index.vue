@@ -125,7 +125,7 @@ const videos = ref<VideoItem[]>([
   },
   {
     id: "v3",
-    src: "/media/videos/aigc-box.mp4",
+    src: "https://zo6rkj6mgncf4uot.public.blob.vercel-storage.com/jimeng-2026-03-24-3777-%E9%95%9C%E5%A4%B41%EF%BC%880-2s%EF%BC%89%E6%8A%93%E4%BA%BA%EF%BC%88%E6%89%BE%E4%B8%8D%E5%88%B0%E4%B8%9C%E8%A5%BF%EF%BC%89%20%E9%A6%96%E5%B8%A7%E6%8F%90%E7%A4%BA%E8%AF%8D%EF%BC%9A%20%E5%87%8C%E4%B9%B1%E6%8A%BD%E5%B1%89%E5%86%85%E9%83%A8%EF%BC%8C%E5%8C%96%E5%A6%86%E5%93%81%E3%80%81%E9%9B%B6%E9%A3%9F%E3%80%81....mp4",
     title: "AI 收纳好物 · 镜头一",
     platform: "竖屏",
     ratio: 720 / 1280, // 0.5625
@@ -168,6 +168,35 @@ const videos = ref<VideoItem[]>([
     title: "云崖未来之城",
     platform: "AIGC 静帧",
     ratio: 16 / 9,
+  },
+]);
+
+// ---- 剪辑作品（真实拍摄 · 剪辑/包装成片）----
+// 素材：public/media/cut/*.mp4（本地真实视频）。标题与实际内容相关，可按需调整
+const cuts = ref<VideoItem[]>([
+  {
+    id: "cut1",
+    src: "/media/cut/mmexport1787848446777.mp4",
+    title: "剪辑作品 01",
+    platform: "竖屏",
+  },
+  {
+    id: "cut2",
+    src: "/media/cut/mmexport1787848493049.mp4",
+    title: "剪辑作品 02",
+    platform: "竖屏",
+  },
+  {
+    id: "cut3",
+    src: "/media/cut/mmexport1787848520356.mp4",
+    title: "剪辑作品 03",
+    platform: "竖屏",
+  },
+  {
+    id: "cut4",
+    src: "/media/cut/mmexport1787848529611.mp4",
+    title: "剪辑作品 04",
+    platform: "竖屏",
   },
 ]);
 
@@ -558,6 +587,46 @@ useSectionReveal();
           </figure>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- #cut：剪辑作品（真实拍摄 · 剪辑成片画廊） -->
+  <section id="cut" class="container-page page-section experience cut-section">
+    <header data-reveal class="experience__head">
+      <p class="experience__kicker">03 / THE CUTS</p>
+      <h1 class="experience__title">剪辑作品</h1>
+      <!-- <p class="experience__subtitle">
+        一线拍摄与后期剪辑包装成片。
+      </p> -->
+      <span class="experience__bar" aria-hidden="true" />
+    </header>
+
+    <div class="cut-grid">
+      <figure
+        v-for="c in cuts"
+        :key="c.id"
+        data-reveal
+        class="cut-card"
+        @click="openWork(c)"
+      >
+        <div class="cut-card__media">
+          <video
+            :src="c.src"
+            preload="metadata"
+            muted
+            playsinline
+            @loadedmetadata="(e) => { const el = e.target as HTMLVideoElement; if (el) c.duration = fmtDur(el.duration); }"
+          />
+          <span class="cut-card__play">
+            <Icon name="mdi:play" :size="30" />
+          </span>
+          <span v-if="c.duration" class="cut-card__dur">{{ c.duration }}</span>
+        </div>
+        <figcaption class="cut-card__meta">
+          <span class="cut-card__plat">{{ c.platform }}</span>
+          <h3 class="cut-card__title">{{ c.title }}</h3>
+        </figcaption>
+      </figure>
     </div>
   </section>
 
