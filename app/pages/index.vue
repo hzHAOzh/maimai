@@ -104,6 +104,8 @@ interface VideoItem {
   duration?: string;
   /** 宽/高比：横屏 > 1，竖屏 < 1；视频由元数据回填，静态图直接写死 */
   ratio?: number;
+  /** 懒加载状态：进视口前不设 src；"metadata" = 正在加载截帧；截完回 undefined 释放下载 */
+  preload?: "metadata";
 }
 
 // AIGC 创作墙：既有横屏也有竖屏；IMG 为横屏实拍，收纳盒/变装为竖屏 AI 作品，
@@ -176,25 +178,25 @@ const videos = ref<VideoItem[]>([
 const cuts = ref<VideoItem[]>([
   {
     id: "cut1",
-    src: "/media/cut/mmexport1787848446777.mp4",
+    src: "https://zo6rkj6mgncf4uot.public.blob.vercel-storage.com/big/cut/mmexport1787848446777.mp4",
     title: "剪辑作品 01",
     platform: "竖屏",
   },
   {
     id: "cut2",
-    src: "/media/cut/mmexport1787848493049.mp4",
+    src: "https://zo6rkj6mgncf4uot.public.blob.vercel-storage.com/big/cut/mmexport1787848493049.mp4",
     title: "剪辑作品 02",
     platform: "竖屏",
   },
   {
     id: "cut3",
-    src: "/media/cut/mmexport1787848520356.mp4",
+    src: "https://zo6rkj6mgncf4uot.public.blob.vercel-storage.com/big/cut/mmexport1787848520356.mp4",
     title: "剪辑作品 03",
     platform: "竖屏",
   },
   {
     id: "cut4",
-    src: "/media/cut/mmexport1787848529611.mp4",
+    src: "https://zo6rkj6mgncf4uot.public.blob.vercel-storage.com/big/cut/mmexport1787848529611.mp4",
     title: "剪辑作品 04",
     platform: "竖屏",
   },
@@ -208,6 +210,11 @@ const videoEls: Record<string, HTMLVideoElement> = {};
 const setVideoRef = (id: string, el: unknown) => {
   if (el) videoEls[id] = el as HTMLVideoElement;
 };
+
+// 按 id 在「AIGC 墙」与「剪辑作品」两个列表里统一查找作品
+const findWork = (id: string): VideoItem | undefined =>
+  videos.value.find((x: VideoItem) => x.id === id) ??
+  cuts.value.find((x: VideoItem) => x.id === id);
 
 const fmtDur = (s: number) =>
   `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
@@ -225,17 +232,18 @@ const syncVideoRatio = (v: VideoItem, el: HTMLVideoElement) => {
 // loadedmetadata：回填真实时长（比例改在 loadeddata 里回填，此时尺寸才可靠）
 const onVideoMeta = (id: string, e: Event) => {
   const el = e.target as HTMLVideoElement;
-  const v = videos.value.find((x: VideoItem) => x.id === id);
+  const v = findWork(id);
   if (!v) return;
   if (el.duration && Number.isFinite(el.duration))
     v.duration = fmtDur(el.duration);
 };
 
-// loadeddata：回填比例 + 跳到片中一点，canvas 抽取封面帧（本地同源，不污染画布）
+// loadeddata：回填比例 + 跳到片中一点，canvas 抽取封面帧
+// 素材走 CDN（Vercel Blob 返回 Access-Control-Allow-Origin:*），配合 <video crossorigin> 后画布不被污染、可导出
 // 8K/4K 视频按比例缩到最长边 1280 再截，避免生成超大画布/超大 dataURL
 const onVideoFrame = (id: string, e: Event) => {
   const el = e.target as HTMLVideoElement;
-  const v = videos.value.find((x: VideoItem) => x.id === id);
+  const v = findWork(id);
   if (!v) return;
   syncVideoRatio(v, el);
   if (v.cover) return;
@@ -249,6 +257,16 @@ const onVideoFrame = (id: string, e: Event) => {
       c.height = Math.round((el.videoHeight || 360) * scale);
       c.getContext("2d")!.drawImage(el, 0, 0, c.width, c.height);
       v.cover = c.toDataURL("image/jpeg", 0.72);
+      // —— 封面已生成：preload 降回 none 并 abort，避免整段视频继续下载 ——
+      v.preload = undefined;
+      nextTick(() => {
+        const ve = videoEls[v.id];
+        if (ve) {
+          ve.pause();
+          ve.preload = "none";
+          ve.load();
+        }
+      });
     } catch {
       /* 截帧失败则保留视频默认画面 */
     }
@@ -342,12 +360,41 @@ const onWallScroll = () => {
   });
 };
 
+// —— 视频卡片懒加载：进视口附近才给 <video> 设 src 并截封面帧（首屏零视频下载）——
+let mediaObserver: IntersectionObserver | null = null;
+const mediaEls = new Set<HTMLElement>();
+const observeMedia = (el: unknown) => {
+  if (el instanceof HTMLElement) {
+    mediaEls.add(el);
+    mediaObserver?.observe(el);
+  }
+};
+
+const onMediaVisible = (entries: IntersectionObserverEntry[]) => {
+  for (const entry of entries) {
+    if (!entry.isIntersecting) continue;
+    const id = (entry.target as HTMLElement).dataset.vid;
+    if (!id) continue;
+    const v = findWork(id);
+    // 静态图走原生 loading=lazy；已有封面 / 正在加载的跳过
+    if (!v || v.kind === "image" || v.cover || v.preload) continue;
+    v.preload = "metadata";
+    nextTick(() => videoEls[id]?.load());
+  }
+};
+
 onMounted(() => {
   resizeWall();
+  mediaObserver = new IntersectionObserver(onMediaVisible, {
+    rootMargin: "400px 0px",
+    threshold: 0,
+  });
+  mediaEls.forEach((el) => mediaObserver!.observe(el));
   window.addEventListener("scroll", onWallScroll, { passive: true });
   window.addEventListener("resize", resizeWall);
 });
 onBeforeUnmount(() => {
+  mediaObserver?.disconnect();
   window.removeEventListener("scroll", onWallScroll);
   window.removeEventListener("resize", resizeWall);
 });
@@ -552,16 +599,19 @@ useSectionReveal();
           <figure
             v-for="v in videos"
             :key="v.id"
+            :data-vid="v.id"
+            :ref="(el) => observeMedia(el)"
             class="vcard"
             @click="openWork(v)"
           >
             <div class="vcard__media" :style="mediaStyle(v)">
-              <!-- 视频：预载元数据抽封面帧；静态图：直接展示原图 -->
+              <!-- 视频：进视口懒加载截封面帧；静态图：直接展示原图 -->
               <video
                 v-if="v.kind !== 'image'"
                 :ref="(el) => setVideoRef(v.id, el)"
-                :src="v.src"
-                preload="auto"
+                :src="v.preload ? v.src : undefined"
+                :preload="v.preload ?? 'none'"
+                crossorigin="anonymous"
                 muted
                 playsinline
                 @loadedmetadata="onVideoMeta(v.id, $event)"
@@ -605,22 +655,29 @@ useSectionReveal();
       <figure
         v-for="c in cuts"
         :key="c.id"
+        :data-vid="c.id"
+        :ref="(el) => observeMedia(el)"
         data-reveal
         class="cut-card"
         @click="openWork(c)"
       >
         <div class="cut-card__media">
           <video
-            :src="c.src"
-            preload="metadata"
+            :ref="(el) => setVideoRef(c.id, el)"
+            :src="c.preload ? c.src : undefined"
+            :preload="c.preload ?? 'none'"
+            crossorigin="anonymous"
             muted
             playsinline
-            @loadedmetadata="
-              (e) => {
-                const el = e.target as HTMLVideoElement;
-                if (el) c.duration = fmtDur(el.duration);
-              }
-            "
+            @loadedmetadata="onVideoMeta(c.id, $event)"
+            @loadeddata="onVideoFrame(c.id, $event)"
+          />
+          <img
+            v-if="c.cover"
+            class="cut-card__cover"
+            :src="c.cover"
+            :alt="c.title"
+            loading="lazy"
           />
           <span class="cut-card__play">
             <Icon name="mdi:play" :size="30" />

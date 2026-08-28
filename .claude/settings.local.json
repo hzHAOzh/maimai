@@ -20,7 +20,13 @@
       "PowerShell($ffprobe = \"$env:USERPROFILE\\\\ffmpeg\\\\ffmpeg-9.0.1-essentials_build\\\\bin\\\\ffprobe.exe\"; $files = @\\(\"C:\\\\Users\\\\wardell\\\\Desktop\\\\个人网站素材\\\\IMG_5534\\(1\\).MP4\", \"C:\\\\Users\\\\wardell\\\\Desktop\\\\个人网站素材\\\\IMG_5412.MP4\"\\); foreach \\($f in $files\\) { Write-Output \"===== $f =====\"; $args = @\\(\"-v\",\"error\",\"-select_streams\",\"v:0\",\"-show_entries\",\"stream=codec_name,width,height,avg_frame_rate,bit_rate\",\"-show_entries\",\"format=duration,bit_rate\",\"-of\",\"default=noprint_wrappers=1\",$f\\); & $ffprobe $args 2>&1 })",
       "PowerShell($ffmpeg = \"$env:USERPROFILE\\\\ffmpeg\\\\ffmpeg-9.0.1-essentials_build\\\\bin\\\\ffmpeg.exe\"; $in = \"C:\\\\Users\\\\wardell\\\\Desktop\\\\个人网站素材\\\\IMG_5534\\(1\\).MP4\"; $out = \"C:\\\\Users\\\\wardell\\\\Desktop\\\\个人网站素材\\\\IMG_5534\\(1\\)_small.mp4\"; & $ffmpeg -y -hide_banner -i $in -c:v libx265 -preset medium -crf 28 -tag:v hvc1 -c:a copy -movflags +faststart $out; Write-Output \\(\"EXITCODE=\" + $LASTEXITCODE\\))",
       "PowerShell($ffprobe = \"$env:USERPROFILE\\\\ffmpeg\\\\ffmpeg-9.0.1-essentials_build\\\\bin\\\\ffprobe.exe\"; $out = \"C:\\\\Users\\\\wardell\\\\Desktop\\\\个人网站素材\\\\IMG_5534\\(1\\)_small.mp4\"; & $ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height,avg_frame_rate,bit_rate -show_entries format=duration -of default=noprint_wrappers=1 $out 2>&1)",
-      "PowerShell($ffmpeg = \"$env:USERPROFILE\\\\ffmpeg\\\\ffmpeg-9.0.1-essentials_build\\\\bin\\\\ffmpeg.exe\"; $in = \"C:\\\\Users\\\\wardell\\\\Desktop\\\\个人网站素材\\\\IMG_5412.MP4\"; $out = \"C:\\\\Users\\\\wardell\\\\Desktop\\\\个人网站素材\\\\IMG_5412_small.mp4\"; & $ffmpeg -y -hide_banner -i $in -c:v libx265 -preset medium -crf 28 -tag:v hvc1 -c:a copy -movflags +faststart $out; Write-Output \\(\"EXITCODE=\" + $LASTEXITCODE\\))"
+      "PowerShell($ffmpeg = \"$env:USERPROFILE\\\\ffmpeg\\\\ffmpeg-9.0.1-essentials_build\\\\bin\\\\ffmpeg.exe\"; $in = \"C:\\\\Users\\\\wardell\\\\Desktop\\\\个人网站素材\\\\IMG_5412.MP4\"; $out = \"C:\\\\Users\\\\wardell\\\\Desktop\\\\个人网站素材\\\\IMG_5412_small.mp4\"; & $ffmpeg -y -hide_banner -i $in -c:v libx265 -preset medium -crf 28 -tag:v hvc1 -c:a copy -movflags +faststart $out; Write-Output \\(\"EXITCODE=\" + $LASTEXITCODE\\))",
+      "PowerShell(Get-ChildItem -Recurse -File public\\\\media | Sort-Object Length -Descending | Select-Object @{N='SizeMB';E={[math]::Round\\($_.Length/1MB,2\\)}}, FullName | Format-Table -AutoSize)",
+      "PowerShell(git lfs *)",
+      "PowerShell(Get-ChildItem public\\\\media\\\\ip -File | Select-Object Name, Length; Write-Host \"---- ffmpeg available? ----\"; \\(Get-Command ffmpeg -ErrorAction SilentlyContinue\\) | Select-Object Source)",
+      "PowerShell(git rm *)",
+      "PowerShell(git add *)",
+      "PowerShell(pnpm typecheck *)"
     ]
   }
 }
