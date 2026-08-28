@@ -111,14 +111,14 @@ interface VideoItem {
 const videos = ref<VideoItem[]>([
   {
     id: "v1",
-    src: "/media/aigc/IMG_5412_small.mp4",
+    src: "https://zo6rkj6mgncf4uot.public.blob.vercel-storage.com/big/IMG_5412_small.mp4",
     title: "短片 · IMG_5412",
     platform: "横屏",
     ratio: 16 / 9, // 7680×4320
   },
   {
     id: "v2",
-    src: "/media/aigc/IMG_5534(1)_small.mp4",
+    src: "https://zo6rkj6mgncf4uot.public.blob.vercel-storage.com/big/IMG_5534%281%29_small.mp4",
     title: "短片 · IMG_5534",
     platform: "横屏",
     ratio: 16 / 9, // 3840×2160
