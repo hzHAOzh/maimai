@@ -1,0 +1,5 @@
+# 3D-IP 透明背景 WebM 视频素材目录
+# 请将你的视频素材放在此目录，默认命名见 docs/ASSETS.md：
+#   hero-intro.webm  首屏开屏动画
+#   hero-wave.webm   鼠标悬浮挥手动画
+#   hero-idle.webm   待机循环动画

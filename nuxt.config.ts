@@ -62,7 +62,7 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: '交互式个人简历 / 作品集官网 —— 替换为你的个人简介' },
+        { name: 'description', content: '麦锐玲 · 新媒体运营 / AI 视频创作者的个人简历与作品集' },
         { name: 'theme-color', content: '#f7f7fb' },
       ],
       link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],

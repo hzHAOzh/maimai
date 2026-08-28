@@ -2,91 +2,111 @@
 // ============================================================
 // 首页 —— 单页滚动展示
 // 所有模块合并到一页，顶部导航点击平滑滚动定位到对应模块：
-//   #home(首屏) / #about(关于我) / #skills(技能栈) / #experience(经历) / #contact(联系)
+//   #home(首屏) / #about(关于我) / #skills(技能栈) / #experience(经历)
+//   / #projects(项目经历) / #contact(联系)
 // ============================================================
 
-const config = useRuntimeConfig();
-const frameDir = config.public.ipFrameDir as string;
-
 // ---- 首屏 Hero ----
-const introTags = ["独立创作者", "交互体验", "视觉作品"];
+const introTags = ["新媒体运营", "AI 视频创作", "内容策划"];
 const hero = {
   kicker: "你好 / HELLO",
   name: "麦锐玲",
   role: "AI创作 / 新媒体运营",
   summary:
-    "热衷于 3D 形象、轻交互与信息排版。把技术当作表达媒介，让作品像人物一样有性格。",
-  now: { kicker: "NOW", title: "3D IP / 轻交互", desc: "正在创作探索…" },
+    "一年新媒体运营经验，专注短视频内容策划与 AI 视频制作，熟悉抖音、视频号、公众号、小红书等平台玩法。用内容表达，让作品被看见。",
+  now: {
+    kicker: "NOW",
+    title: "AI 视频 / 短视频内容",
+    desc: "正在探索 AI 视频制作与内容增长…",
+  },
 };
 
 // ---- 关于我 ----
-const aboutTags = ["前端工程", "3D 交互动效", "Nuxt", "Vue", "TypeScript"];
+const aboutTags = ["平台运营", "视频创作", "AI 能力", "内容创作", "数据分析"];
 const aboutCards = [
-  { title: "教育背景", desc: "（占位）替换为你的真实教育背景。" },
-  { title: "职业方向", desc: "（占位）替换为你的真实职业方向。" },
-  { title: "个人兴趣", desc: "（占位）替换为你的真实个人兴趣。" },
+  {
+    title: "教育背景",
+    desc: "广东财经大学 · 数字媒体艺术（本科，2021—2025）。主修影视摄影与剪辑、数字影视特效与合成、交互产品开发、微电影创作。",
+  },
+  {
+    title: "职业方向",
+    desc: "新媒体运营 / AI 视频创作。专注短视频内容策划、制作与多平台运营，熟悉抖音、视频号、公众号、小红书。",
+  },
+  {
+    title: "个人兴趣",
+    desc: "影视摄影、短视频创作、AI 工具探索，热衷把热点与创意转化为有传播力的内容。",
+  },
 ];
 
-// ---- 技能栈（悬停切换 IP 序列帧表情）----
+// ---- 技能栈（无序列帧素材，走 SkillCard 图标兜底）----
 const skills = [
   {
-    title: "Vue / Nuxt",
-    description: "前端框架与 SSR 工程化。",
+    title: "平台运营",
+    description:
+      "熟练运营抖音、视频号、公众号、小红书等平台，了解账号搭建、流量规则与算法逻辑。",
     level: 90,
-    icon: "mdi:vuejs",
-    ipFrames: [
-      `${frameDir}/skill-01/0001.png`,
-      `${frameDir}/skill-01/0002.png`,
-      `${frameDir}/skill-01/0003.png`,
-    ],
-  },
-  {
-    title: "TypeScript",
-    description: "类型安全与工程实践。",
-    level: 85,
-    icon: "mdi:language-typescript",
+    icon: "mdi:bullhorn",
     ipFrames: [],
   },
   {
-    title: "SCSS / CSS",
-    description: "CSS 预处理与样式架构。",
+    title: "视频创作 / AI",
+    description:
+      "掌握拍摄、剪辑、字幕包装全流程，熟练使用剪映、Canva；可借助 AI 完成脚本生成、素材与智能剪辑。",
     level: 88,
-    icon: "mdi:sass",
+    icon: "mdi:video-outline",
     ipFrames: [],
   },
   {
-    title: "Node.js",
-    description: "服务端与工具链开发。",
-    level: 75,
-    icon: "mdi:nodejs",
+    title: "内容创作",
+    description: "擅长文案撰写、脚本创作与选题策划，能结合热点与平台调性挖掘选题。",
+    level: 85,
+    icon: "mdi:pen",
+    ipFrames: [],
+  },
+  {
+    title: "数据分析",
+    description: "擅长后台数据分析，根据数据复盘优化内容、调整方向。",
+    level: 80,
+    icon: "mdi:chart-line",
     ipFrames: [],
   },
 ];
 
-// ---- 经历（时间轴）----
+// ---- 经历（时间轴 · 工作经历）----
 const experiences = [
   {
-    period: "2023 — 至今",
-    role: "岗位名称",
-    org: "公司 / 项目",
-    desc: "一句话描述你的职责与成果（替换为真实内容）。",
+    period: "2026-04 — 至今",
+    role: "宣传专员",
+    org: "深圳市公安局交通警察支队南山大队侨城中队",
+    desc: "负责交警支队官方公众号全流程运营，独立撰写推文 20 篇，阅读量稳定在几千至数万；独立完成宣传物料拍摄、剪辑、字幕包装全流程，每周产出多条宣传视频。",
   },
   {
-    period: "2021 — 2023",
-    role: "岗位名称",
-    org: "公司 / 项目",
-    desc: "一句话描述你的职责与成果（替换为真实内容）。",
+    period: "2025-07 — 2026-02",
+    role: "新媒体运营",
+    org: "广州市箐北文化服务有限公司",
+    desc: "负责抖音、小红书、视频号、公众号四大平台从 0-1 搭建与全流程运营；主导视频号内容产出（近 1 个月 23 条短视频、总浏览 2.3W+），独立产出公众号推文 16 篇、小红书内容 22 篇。",
+  },
+];
+
+// ---- 项目经历 ----
+const projects = [
+  {
+    period: "2026-07 — 至今",
+    role: "AI 视频制作",
+    org: "AI短剧带货视频",
+    desc: "对标抖音高收藏爆款，拆解脚本叙事逻辑、开篇钩子、内容节奏与高留存结构；用 AI 工具辅助脚本生成、画面素材与剪辑包装，沉淀可复用的短视频内容生产方法论。",
   },
   {
-    period: "2019 — 2021",
-    role: "岗位名称",
-    org: "公司 / 项目",
-    desc: "一句话描述你的职责与成果（替换为真实内容）。",
+    period: "2023-04 — 2023-06",
+    role: "制片",
+    org: "《这，就是广财》",
+    desc: "参与学校官方宣传片全流程制片，负责拍摄排期规划、场地协调与人员调度，对接编剧、摄像、演员及后期团队，助力宣传片顺利成片并公开展示。",
   },
 ];
 
 // ---- 联系 ----
-const contactEmail = "you@example.com";
+const contactEmail = "1037111360@qq.com";
+const contactPhone = "13714294135";
 
 // 区块滚动渐入动画（配合 data-reveal 属性）
 useSectionReveal();
@@ -153,7 +173,7 @@ useSectionReveal();
   <section id="about" class="container-page page-section">
     <h1 class="page-title">关于我</h1>
     <p class="page-subtitle">
-      （占位）在这里填写你的个人简介：教育背景、职业方向、个人标签、兴趣等。
+      一年新媒体运营经验，独立运营过政务公众号与多平台账号，擅长内容策划、视频制作与数据分析。
     </p>
 
     <div data-reveal class="tags">
@@ -179,7 +199,7 @@ useSectionReveal();
   <!-- #skills：技能栈 -->
   <section id="skills" class="container-page page-section">
     <h1 class="page-title">技能栈</h1>
-    <p class="page-subtitle">（占位）悬停卡片可切换对应 IP 表情序列帧。</p>
+    <p class="page-subtitle">覆盖平台运营、视频创作与 AI 内容生产，专注打造有传播力的内容。</p>
 
     <div class="skills-grid">
       <SkillCard
@@ -211,5 +231,49 @@ useSectionReveal();
         <p class="timeline__desc">{{ e.desc }}</p>
       </li>
     </ol>
+  </section>
+
+  <!-- #projects：项目经历 -->
+  <section id="projects" class="container-page page-section">
+    <h1 class="page-title">项目经历</h1>
+    <p class="page-subtitle">代表性项目与作品。</p>
+
+    <ol class="timeline">
+      <li
+        v-for="p in projects"
+        :key="p.period"
+        data-reveal
+        class="timeline__item"
+      >
+        <span class="timeline__dot" />
+        <p class="timeline__period">{{ p.period }}</p>
+        <h3 class="timeline__title">{{ p.role }} · {{ p.org }}</h3>
+        <p class="timeline__desc">{{ p.desc }}</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- #contact：联系我 -->
+  <section id="contact" class="container-page page-section contact-section">
+    <h1 class="page-title">联系我</h1>
+    <p class="page-subtitle">有合作意向或想聊聊内容创作，欢迎联系。</p>
+
+    <div data-reveal class="contact-section__panel">
+      <img
+        src="/images/wechat.png"
+        alt="微信二维码"
+        loading="lazy"
+        class="contact-section__qr"
+      />
+      <span class="contact-section__qr-label">微信扫码 · 添加好友</span>
+      <a :href="`mailto:${contactEmail}`" class="contact-section__email">
+        <Icon name="mdi:email-outline" :size="18" />
+        {{ contactEmail }}
+      </a>
+      <a :href="`tel:${contactPhone}`" class="contact-section__email">
+        <Icon name="mdi:phone-outline" :size="18" />
+        {{ contactPhone }}
+      </a>
+    </div>
   </section>
 </template>

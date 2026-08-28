@@ -432,10 +432,7 @@ section[id] {
     border: 1px solid $border-normal;
     border-radius: $radius-md;
     background-color: #fff;
-    background-image:
-      linear-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
-    background-size: 0.875rem 0.875rem;
+    object-fit: contain;
   }
 
   &__qr-label {

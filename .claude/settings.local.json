@@ -8,7 +8,9 @@
       "WebFetch(domain:pages.edgeone.ai)",
       "PowerShell(node \"C:/Users/wardell/.claude/skills/vision/vision.js\" \"C:\\\\Users\\\\wardell\\\\Desktop\\\\微信图片_20260828005558_18_2.png\" \"这是一个腾讯云 EdgeOne 控制台的截图。请完整识别截图中的所有文字内容，尤其是：1\\) 页面标题/当前所在模块；2\\) '源站类型'下拉框里所有可选项；3\\) 源站地址、回源协议、回源 HOST 等字段当前填写的内容；4\\) 页面上任何按钮文字和提示信息。请逐字转录所有可见文本。\")",
       "PowerShell(npx --yes serve .output/public -l 3000)",
-      "PowerShell(Start-Sleep -Seconds 3; Get-Content \"C:\\\\Users\\\\wardell\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-wardell-Desktop-code-maimai\\\\f0d66ac5-ac0b-490d-8e16-0a5bd6109eaf\\\\tasks\\\\bxud0x4i3.output\"; try { $r = Invoke-WebRequest -Uri \"http://localhost:3000\" -UseBasicParsing -TimeoutSec 5; \"HTTP_STATUS: $\\($r.StatusCode\\)\" } catch { \"REQ_FAILED: $\\($_.Exception.Message\\)\" })"
+      "PowerShell(Start-Sleep -Seconds 3; Get-Content \"C:\\\\Users\\\\wardell\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-wardell-Desktop-code-maimai\\\\f0d66ac5-ac0b-490d-8e16-0a5bd6109eaf\\\\tasks\\\\bxud0x4i3.output\"; try { $r = Invoke-WebRequest -Uri \"http://localhost:3000\" -UseBasicParsing -TimeoutSec 5; \"HTTP_STATUS: $\\($r.StatusCode\\)\" } catch { \"REQ_FAILED: $\\($_.Exception.Message\\)\" })",
+      "PowerShell(python --version; Write-Output \"---\"; python -c \"import fitz; print\\('pymupdf ok'\\)\" 2>$null; python -c \"import pypdf; print\\('pypdf ok'\\)\" 2>$null; python -c \"import PyPDF2; print\\('PyPDF2 ok'\\)\" 2>$null; python -c \"import pdfplumber; print\\('pdfplumber ok'\\)\" 2>$null)",
+      "PowerShell(Write-Output \"=== python ===\"; \\(Get-Command python -ErrorAction SilentlyContinue\\).Source; Write-Output \"=== py ===\"; \\(Get-Command py -ErrorAction SilentlyContinue\\).Source; Write-Output \"=== pdftotext ===\"; \\(Get-Command pdftotext -ErrorAction SilentlyContinue\\).Source; Write-Output \"=== gs ===\"; \\(Get-Command gswin64c -ErrorAction SilentlyContinue\\).Source; Write-Output \"=== python3 ===\"; \\(Get-Command python3 -ErrorAction SilentlyContinue\\).Source)"
     ]
   }
 }
