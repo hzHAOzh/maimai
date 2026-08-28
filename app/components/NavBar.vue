@@ -8,14 +8,12 @@
 // 导航项（对应单页模块锚点）
 const navItems = [
   { label: "首页", anchor: "#home" },
-  { label: "关于我", anchor: "#about" },
-  { label: "技能栈", anchor: "#skills" },
   { label: "经历", anchor: "#experience" },
   { label: "项目", anchor: "#projects" },
 ];
 
 // 单页模块 id（用于 scrollspy 判定）
-const sectionIds = ["home", "about", "skills", "experience", "projects", "contact"];
+const sectionIds = ["home", "experience", "projects", "contact"];
 
 // 是否已滚动（用于增强导航栏阴影）
 const scrolled = ref(false);

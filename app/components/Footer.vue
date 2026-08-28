@@ -9,7 +9,7 @@ const year = new Date().getFullYear()
 <template>
   <footer class="footer">
     <div class="container-page footer__inner">
-      <p class="footer__copy">© {{ year }} 麦锐玲 · 交互式 3D-IP 个人简历</p>
+      <p class="footer__copy">© {{ year }} 麦锐玲 · AIGC 创作 / 新媒体运营</p>
 
       <div class="footer__links">
         <a href="mailto:1037111360@qq.com" class="footer__link">

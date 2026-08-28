@@ -2,8 +2,7 @@
 // ============================================================
 // 首页 —— 单页滚动展示
 // 所有模块合并到一页，顶部导航点击平滑滚动定位到对应模块：
-//   #home(首屏) / #about(关于我) / #skills(技能栈) / #experience(经历)
-//   / #projects(项目经历) / #contact(联系)
+//   #home(首屏) / #experience(经历) / #projects(项目经历) / #contact(联系)
 // ============================================================
 
 // ---- 首屏 Hero ----
@@ -21,72 +20,75 @@ const hero = {
   },
 };
 
-// ---- 关于我 ----
-const aboutTags = ["平台运营", "视频创作", "AIGC", "内容策划", "数据分析"];
-const aboutCards = [
-  {
-    title: "教育背景",
-    desc: "广东财经大学 · 数字媒体艺术（本科，2021—2025）。主修影视摄影与剪辑、数字影视特效与合成、交互产品开发、微电影创作。",
-  },
-  {
-    title: "职业方向",
-    desc: "新媒体运营 / AIGC 视频创作。精通抖音、小红书、视频号等平台从 0-1 搭建与运营，擅长结合平台算法与热点挖掘选题，以数据驱动内容增长。",
-  },
-  {
-    title: "个人兴趣",
-    desc: "影视摄影、短视频创作、AI 工具探索，热衷把热点与创意转化为有传播力的内容。",
-  },
-];
-
-// ---- 技能栈（无序列帧素材，走 SkillCard 图标兜底）----
-const skills = [
-  {
-    title: "平台运营",
-    description:
-      "深度理解抖音、小红书、视频号流量分发逻辑，擅长账号冷启动、爆款选题规划及粉丝社群维护。",
-    level: 90,
-    icon: "mdi:bullhorn",
-    ipFrames: [],
-  },
-  {
-    title: "视频创作 / AI",
-    description:
-      "精通视频全流程制作（拍摄/剪辑/包装），深度应用剪映、CapCut 及各类 AI 视频工具，利用 AI 实现产能翻倍。",
-    level: 88,
-    icon: "mdi:video-outline",
-    ipFrames: [],
-  },
-  {
-    title: "内容策划",
-    description:
-      "网感强，冲浪速度快，善于捕捉热点并快速落地为图文或视频脚本，具备优秀的文案共情力。",
-    level: 85,
-    icon: "mdi:pen",
-    ipFrames: [],
-  },
-  {
-    title: "数据分析",
-    description:
-      "熟练使用各平台后台及分析工具，通过完播率、互动率、转粉率等关键指标精准定位内容问题并制定优化方案。",
-    level: 80,
-    icon: "mdi:chart-line",
-    ipFrames: [],
-  },
-];
-
 // ---- 经历（时间轴 · 工作经历）----
+// 字段说明：
+//   tag：卡片顶部彩色胶囊；accent：粉/紫主题色；imageSide：图片卡放在左还是右
+//   photos：照片墙（多张错落叠放的拍立得）；cardTag：图片下方绿色角色标签；note：右下角提示
 const experiences = [
   {
     period: "2026-04 — 至今",
-    role: "宣传专员",
     org: "深圳市公安局交通警察支队南山大队侨城中队",
-    desc: "负责交警支队官方公众号运营，独立撰写并发布推文 20 篇，内容涵盖科普、节日及专题报道，单篇阅读量稳定达数千至数万；承担内部视频物料全流程制作（拍摄/剪辑/包装），周更数条；对接多业务科室，统筹活动纪实素材拍摄与归档。",
+    role: "宣传专员",
+    tag: "政务 · 一线宣传",
+    accent: "pink",
+    imageSide: "right",
+    note: "点击卡片阅读原文",
+    cardTag: "宣传专员 / 政务新媒体",
+    articles: [
+      {
+        title: "持续严查地铁口“拉客”带篷车！一男子阻碍执法被拘留→",
+        url: "https://mp.weixin.qq.com/s/VagLnUTZkZ2nLyW_0d-vQA",
+      },
+      {
+        title: "溯源追责，公司4名负责人被拘！货车安全警示，专项整治持续→",
+        url: "https://mp.weixin.qq.com/s/KKh7uBjjUMggFtiaAybb_Q",
+      },
+      {
+        title: "高速上的低速车，抓拍曝光！行车有节奏，慢驶≠安全！→",
+        url: "https://mp.weixin.qq.com/s/xyuulzgo_ue7wSNEfh-xkw",
+      },
+    ],
+    descList: [
+      "负责交警支队官方公众号运营，独立撰写并发布推文 20 篇，内容涵盖科普、节日及专题报道，单篇阅读量稳定达数千至数万。",
+      "承担内部视频物料全流程制作(拍摄/剪辑/包装)，保持每周稳定更新。",
+      "对接多业务科室，统筹活动纪实素材的拍摄与归档。",
+    ],
   },
   {
     period: "2025-07 — 2026-02",
-    role: "新媒体运营",
     org: "广州市箐北文化服务有限公司",
-    desc: "主导抖音、小红书、视频号、公众号四大平台从 0-1 搭建与运营，完成账号定位、视觉包装及内容体系搭建，形成良性互通的矩阵生态；独立产出公众号推文 16 篇、小红书官方笔记 20 篇（单篇浏览量突破 5000+），近 1 个月为视频号产出短视频 23 条、内容累计曝光 2.3W+、新增关注 100+；统筹视频号及抖音直播后台，保障多场直播平稳落地；定期进行平台算法调研与竞品分析，根据完播率、互动率等数据反向指导内容迭代。",
+    role: "新媒体运营",
+    tag: "内容 · 一线运营",
+    accent: "purple",
+    imageSide: "left",
+    note: "点击图标跳转对应账号 · 账号截图可放大预览",
+    cardTag: "新媒体运营 / 内容策划",
+    platforms: [
+      {
+        name: "抖音",
+        img: "https://upload.wikimedia.org/wikipedia/en/8/85/Douyin_logo.svg",
+        bg: "linear-gradient(135deg, #e9f8f7, #fdeef2)",
+        url: "https://www.douyin.com/user/MS4wLjABAAAAOCt2khhqtKEpUiLfbqe1LKkZPBXRRxEl4bLN0PDtGoKX_Of60Q_MgvFufe7jYbOo?from_tab_name=main",
+      },
+      {
+        name: "小红书",
+        img: "https://cdn.simpleicons.org/xiaohongshu/ff2442",
+        bg: "linear-gradient(135deg, #fff0f3, #ffe3e9)",
+        url: "https://www.xiaohongshu.com/user/profile/674d648c000000001d02e5d0?xsec_token=ABm85EAu5aQFTMZp56K7szgRCHSdr_x1b4yrriotckC9w%3D&xsec_source=pc_search",
+      },
+      {
+        name: "各平台账号截图",
+        img: "/images/platforms/accounts.png",
+        label: "抖音 / 小红书 / 视频号",
+        preview: true,
+        url: "https://channels.weixin.qq.com/",
+      },
+    ],
+    descList: [
+      "主导抖音、小红书、视频号、公众号四大平台从 0-1 搭建与运营，完成账号定位、视觉包装及内容体系搭建。",
+      "独立产出公众号推文 16 篇、小红书官方笔记 20 篇（单篇浏览量破 5000+）；近 1 个月为视频号产出短视频 23 条，累计曝光 2.3W+、新增关注 100+。",
+      "定期开展平台算法调研与竞品分析，根据完播率、互动率等数据反向指导内容迭代。",
+    ],
   },
 ];
 
@@ -109,6 +111,30 @@ const projects = [
 // ---- 联系 ----
 const contactEmail = "1037111360@qq.com";
 const contactPhone = "13714294135";
+
+// ---- 平台账号截图放大预览（灯箱）----
+interface PlatformItem {
+  name: string;
+  img: string;
+  bg?: string;
+  label?: string;
+  url: string;
+  preview?: boolean;
+}
+
+const preview = ref<{ img: string; name: string; url: string } | null>(null);
+
+// 点击拍立得：抖音/小红书默认新标签页跳转账号；视频号截图打开放大预览
+const onPolaroidClick = (e: MouseEvent, p: PlatformItem) => {
+  if (p.preview) {
+    e.preventDefault();
+    preview.value = { img: p.img, name: p.label ?? p.name, url: p.url };
+  }
+};
+
+// 拍立得悬浮提示：抖音/小红书跳转账号；视频号放大预览
+const polaroidTitle = (p: PlatformItem) =>
+  p.preview ? `点击放大预览${p.label ?? p.name}` : `跳转 ${p.name} 账号主页`;
 
 // 区块滚动渐入动画（配合 data-reveal 属性）
 useSectionReveal();
@@ -171,68 +197,93 @@ useSectionReveal();
     </div>
   </section>
 
-  <!-- #about：关于我 -->
-  <section id="about" class="container-page page-section">
-    <h1 class="page-title">关于我</h1>
-    <p class="page-subtitle">
-      一年新媒体运营经验，独立运营过政务公众号与多平台账号，擅长内容策划、视频制作与数据分析。
-    </p>
-
-    <div data-reveal class="tags">
-      <span v-for="t in aboutTags" :key="t" class="tag tag--outline">{{
-        t
-      }}</span>
-    </div>
-
-    <div class="info-grid">
-      <div
-        v-for="(item, i) in aboutCards"
-        :key="item.title"
-        data-reveal
-        :style="{ transitionDelay: `${i * 60}ms` }"
-        class="card card--hover info-card"
-      >
-        <h3 class="info-card__title">{{ item.title }}</h3>
-        <p class="info-card__desc">{{ item.desc }}</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- #skills：技能栈 -->
-  <section id="skills" class="container-page page-section">
-    <h1 class="page-title">技能栈</h1>
-    <p class="page-subtitle">
-      覆盖平台运营、视频创作与 AI 内容生产，专注打造有传播力的内容。
-    </p>
-
-    <div class="skills-grid">
-      <SkillCard
-        v-for="(s, i) in skills"
-        :key="s.title"
-        v-bind="s"
-        data-reveal
-        :style="{ transitionDelay: `${i * 60}ms` }"
-        @select="(t: string) => console.log('选中技能：', t)"
-      />
-    </div>
-  </section>
-
   <!-- #experience：经历 -->
-  <section id="experience" class="container-page page-section">
-    <h1 class="page-title">经历</h1>
-    <p class="page-subtitle">工作与项目经历。</p>
+  <section id="experience" class="container-page page-section experience">
+    <header class="experience__head">
+      <p class="experience__kicker">01 / THE PRACTITIONER</p>
+      <h1 class="experience__title">我在真实现场做过什么</h1>
+      <!-- <p class="experience__subtitle">
+        以设计师的眼光走入真实商业现场，让每一次定义都经由真实经验与成果发生。
+      </p> -->
+      <span class="experience__bar" aria-hidden="true" />
+    </header>
 
-    <ol class="timeline">
+    <ol class="timeline timeline--design">
       <li
-        v-for="e in experiences"
+        v-for="(e, i) in experiences"
         :key="e.period"
         data-reveal
         class="timeline__item"
+        :class="`timeline__item--${e.imageSide}`"
       >
-        <span class="timeline__dot" />
-        <p class="timeline__period">{{ e.period }}</p>
-        <h3 class="timeline__title">{{ e.role }} · {{ e.org }}</h3>
-        <p class="timeline__desc">{{ e.desc }}</p>
+        <span class="timeline__node">{{ i + 1 }}</span>
+
+        <article class="timeline__card timeline__card--text">
+          <p class="timeline__period">{{ e.period }}</p>
+          <h3 class="timeline__title">{{ e.org }}</h3>
+          <span class="timeline__pill" :class="`timeline__pill--${e.accent}`">
+            {{ e.tag }}
+          </span>
+          <div class="timeline__desc">
+            <p v-for="d in e.descList" :key="d">{{ d }}</p>
+          </div>
+        </article>
+
+        <figure
+          v-if="e.articles?.length || e.platforms?.length"
+          class="timeline__card timeline__card--media"
+        >
+          <div v-if="e.articles?.length" class="timeline__articles">
+            <p class="timeline__articles-title">
+              <Icon name="mdi:newspaper-variant-outline" :size="14" />
+              精选推文 · 公众号作品
+            </p>
+            <a
+              v-for="a in e.articles"
+              :key="a.url"
+              :href="a.url"
+              target="_blank"
+              rel="noopener"
+              class="timeline__article-card"
+            >
+              <span class="timeline__article-card-title">{{ a.title }}</span>
+              <Icon
+                name="mdi:open-in-new"
+                :size="16"
+                class="timeline__article-card-icon"
+              />
+            </a>
+          </div>
+          <div v-else-if="e.platforms?.length" class="photo-wall">
+            <a
+              v-for="p in e.platforms"
+              :key="p.name"
+              :href="p.url"
+              target="_blank"
+              rel="noopener"
+              :class="[
+                'photo-wall__polaroid',
+                p.preview
+                  ? 'photo-wall__polaroid--shot'
+                  : 'photo-wall__polaroid--logo',
+              ]"
+              :title="polaroidTitle(p)"
+              :data-caption="p.name"
+              @click="onPolaroidClick($event, p)"
+            >
+              <img
+                :src="p.img"
+                :alt="p.label ?? p.name"
+                :style="p.bg ? { background: p.bg } : undefined"
+                loading="lazy"
+              />
+            </a>
+          </div>
+          <figcaption class="timeline__media-foot">
+            <span class="timeline__card-tag">{{ e.cardTag }}</span>
+            <span class="timeline__note">{{ e.note }}</span>
+          </figcaption>
+        </figure>
       </li>
     </ol>
   </section>
@@ -280,4 +331,46 @@ useSectionReveal();
       </a>
     </div>
   </section>
+
+  <!-- 平台账号截图放大预览灯箱 -->
+  <Teleport to="body">
+    <Transition name="lightbox">
+      <div
+        v-if="preview"
+        class="lightbox"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="`${preview.name} 账号主页`"
+        @click.self="preview = null"
+      >
+        <button
+          type="button"
+          class="lightbox__close"
+          aria-label="关闭预览"
+          @click="preview = null"
+        >
+          <Icon name="mdi:close" :size="22" />
+        </button>
+        <figure class="lightbox__frame">
+          <img
+            :src="preview.img"
+            :alt="`${preview.name} 账号主页`"
+            class="lightbox__img"
+          />
+          <figcaption class="lightbox__foot">
+            <span class="lightbox__name">{{ preview.name }} 账号主页</span>
+            <!-- <a
+              :href="preview.url"
+              target="_blank"
+              rel="noopener"
+              class="lightbox__link"
+            >
+              前往主页
+              <Icon name="mdi:open-in-new" :size="14" />
+            </a> -->
+          </figcaption>
+        </figure>
+      </div>
+    </Transition>
+  </Teleport>
 </template>
