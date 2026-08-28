@@ -132,7 +132,7 @@ const videos = ref<VideoItem[]>([
   },
   {
     id: "v4",
-    src: "/media/videos/aigc-costume.mp4",
+    src: "https://zo6rkj6mgncf4uot.public.blob.vercel-storage.com/%E5%8F%98%E8%A3%85ai%E8%A7%86%E9%A2%91.mp4",
     title: "AI 变装 · 一键换装",
     platform: "竖屏",
     ratio: 834 / 1112, // 0.75
@@ -615,7 +615,12 @@ useSectionReveal();
             preload="metadata"
             muted
             playsinline
-            @loadedmetadata="(e) => { const el = e.target as HTMLVideoElement; if (el) c.duration = fmtDur(el.duration); }"
+            @loadedmetadata="
+              (e) => {
+                const el = e.target as HTMLVideoElement;
+                if (el) c.duration = fmtDur(el.duration);
+              }
+            "
           />
           <span class="cut-card__play">
             <Icon name="mdi:play" :size="30" />
