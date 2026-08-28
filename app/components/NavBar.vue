@@ -8,9 +8,9 @@
 // 导航项（对应单页模块锚点）
 const navItems = [
   { label: "首页", anchor: "#home" },
-  { label: "经历", anchor: "#experience" },
-  { label: "项目", anchor: "#projects" },
-  { label: "剪辑", anchor: "#cut" },
+  { label: "账号运营", anchor: "#experience" },
+  { label: "AIGC", anchor: "#projects" },
+  { label: "剪辑作品", anchor: "#cut" },
 ];
 
 // 单页模块 id（用于 scrollspy 判定）

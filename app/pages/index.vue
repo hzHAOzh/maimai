@@ -491,8 +491,8 @@ useSectionReveal();
   <!-- #experience：经历 -->
   <section id="experience" class="container-page page-section experience">
     <header class="experience__head">
-      <p class="experience__kicker">01 / THE PRACTITIONER</p>
-      <h1 class="experience__title">工作经历</h1>
+      <p class="experience__kicker">01 / ACCOUNT MANAGEMENT</p>
+      <h1 class="experience__title">账号运营</h1>
       <!-- <p class="experience__subtitle">
         以设计师的眼光走入真实商业现场，让每一次定义都经由真实经验与成果发生。
       </p> -->
@@ -587,7 +587,7 @@ useSectionReveal();
     <div ref="wallTrack" class="video-wall__track">
       <div ref="wallStage" class="video-wall__stage">
         <header class="experience__head">
-          <p class="experience__kicker">02 / THE PROJECTS</p>
+          <p class="experience__kicker">02 / AIGC</p>
           <h1 class="experience__title">AIGC 创作</h1>
           <!-- <p class="experience__subtitle">
             代表性项目与作品。
