@@ -890,6 +890,163 @@
   opacity: 0;
 }
 
+// 视频灯箱：横屏视频放宽视口
+.lightbox--video {
+  .lightbox__frame--video {
+    max-width: min(94vw, 64rem);
+  }
+
+  .lightbox__video {
+    display: block;
+    width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: $radius-md;
+    box-shadow: $shadow-lg;
+    background: #000;
+  }
+}
+
+// ---------- AIGC 创作：纵向滚动驱动横向位移的视频墙 ----------
+.video-wall {
+  &__track {
+    position: relative;
+    height: 260vh; /* JS 挂载后按卡片条实际宽度校准 */
+  }
+
+  &__stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    overflow: hidden;
+
+    // 左右边缘渐变虚化：卡片滑出视口时柔化收尾（随 stage 固定，不随卡片条移动）
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      #000 min(2.5vw, 1.75rem),
+      #000 calc(100% - min(2.5vw, 1.75rem)),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      #000 min(2.5vw, 1.75rem),
+      #000 calc(100% - min(2.5vw, 1.75rem)),
+      transparent 100%
+    );
+  }
+
+  &__strip {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    padding-inline: 6vw;
+    width: max-content;
+    will-change: transform;
+    align-items: center;
+  }
+}
+
+.vcard {
+  flex: none;
+  width: max-content; /* 宽度跟随媒体框：横屏卡片宽、竖屏卡片窄 */
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-6px);
+
+    .vcard__play {
+      background: $brand-500;
+    }
+  }
+
+  &__media {
+    /* 尺寸由内联 mediaStyle 决定：横屏按宽限、竖屏按高限，随真实比例自适应 */
+    position: relative;
+    border-radius: $radius-lg;
+    overflow: hidden;
+    background: linear-gradient(160deg, $brand-100, $brand-50);
+
+    video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* 比例未到位时不裁切 */
+    }
+  }
+
+  &__cover {
+    position: absolute;
+    inset: 0;
+    // width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: $radius-full;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+    transition: background 0.25s ease;
+  }
+
+  &__dur {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: $radius-sm;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-family: $font-mono;
+    font-size: 0.6875rem;
+  }
+
+  &__meta {
+    margin-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__plat {
+    flex: none;
+    padding: 0.15rem 0.55rem;
+    border-radius: $radius-full;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: $brand-600;
+    background: rgba($brand-500, 0.12);
+  }
+
+  &__title {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 // ---------- 锚点滚动留白（避免被固定导航遮挡）----------
 section[id] {
   scroll-margin-top: 5.5rem;

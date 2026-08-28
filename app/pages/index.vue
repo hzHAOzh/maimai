@@ -2,7 +2,7 @@
 // ============================================================
 // 首页 —— 单页滚动展示
 // 所有模块合并到一页，顶部导航点击平滑滚动定位到对应模块：
-//   #home(首屏) / #experience(经历) / #projects(项目经历) / #contact(联系)
+//   #home(首屏) / #experience(经历) / #projects(AIGC 创作) / #contact(联系)
 // ============================================================
 
 // ---- 首屏 Hero ----
@@ -92,21 +92,210 @@ const experiences = [
   },
 ];
 
-// ---- 项目经历 ----
-const projects = [
+// ---- AIGC 创作：AIGC 创作视频（纵向滚动驱动横向位移）----
+interface VideoItem {
+  id: string;
+  src: string;
+  title: string;
+  platform: string;
+  /** image = 静态图卡片，video（默认）= 视频卡片 */
+  kind?: "image" | "video";
+  cover?: string;
+  duration?: string;
+  /** 宽/高比：横屏 > 1，竖屏 < 1；视频由元数据回填，静态图直接写死 */
+  ratio?: number;
+}
+
+// AIGC 创作墙：既有横屏也有竖屏；IMG 为横屏实拍，收纳盒/变装为竖屏 AI 作品，
+// 另含 4 张 AI 生成静态图（16:9 横屏，ratio 已知）
+const videos = ref<VideoItem[]>([
   {
-    period: "2026-07 — 至今",
-    role: "AI 视频制作",
-    org: "AIGC赋能短视频带货项目（抖音电商方向）",
-    desc: "深度拆解抖音高收藏、高转化爆款带货视频，针对黄金 3 秒钩子、脚本结构及节奏卡点进行模型提炼；基于拆解模型，利用 AI 工具完成脚本生成、AI 配音及画面素材的智能匹配，独立完成从策划到成片的全流程，打造出可批量复制的短视频内容生产线，极大降低内容试错成本。",
+    id: "v1",
+    src: "/media/videos/img-5412.mp4",
+    title: "短片 · IMG_5412",
+    platform: "横屏",
   },
   {
-    period: "2023-04 — 2023-06",
-    role: "制片",
-    org: "《这，就是广财》",
-    desc: "参与学校官方宣传片全流程制片，负责拍摄排期规划、场地协调与人员调度，对接编剧、摄像、演员及后期团队，助力宣传片顺利成片并公开展示。",
+    id: "v2",
+    src: "/media/videos/img-5534.mp4",
+    title: "短片 · IMG_5534",
+    platform: "横屏",
   },
-];
+  {
+    id: "v3",
+    src: "/media/videos/aigc-box.mp4",
+    title: "AI 收纳好物 · 镜头一",
+    platform: "竖屏",
+  },
+  {
+    id: "v4",
+    src: "/media/videos/aigc-costume.mp4",
+    title: "AI 变装 · 一键换装",
+    platform: "竖屏",
+  },
+  {
+    id: "w1",
+    kind: "image",
+    src: "/media/aigc/aigc-bridge.jpg",
+    title: "暮色廊桥映湖光",
+    platform: "AIGC 静帧",
+    ratio: 16 / 9,
+  },
+  {
+    id: "w2",
+    kind: "image",
+    src: "/media/aigc/aigc-ruin-city.jpg",
+    title: "末世绿都",
+    platform: "AIGC 静帧",
+    ratio: 16 / 9,
+  },
+  {
+    id: "w3",
+    kind: "image",
+    src: "/media/aigc/aigc-night-bridge.jpg",
+    title: "夜谷星环之桥",
+    platform: "AIGC 静帧",
+    ratio: 16 / 9,
+  },
+  {
+    id: "w4",
+    kind: "image",
+    src: "/media/aigc/aigc-cloud-city.jpg",
+    title: "云崖未来之城",
+    platform: "AIGC 静帧",
+    ratio: 16 / 9,
+  },
+]);
+
+// 正在灯箱展示的作品（视频或静态图）
+const active = ref<VideoItem | null>(null);
+
+// 视频卡片 DOM 引用：读取真实时长 + 抽取封面帧
+const videoEls: Record<string, HTMLVideoElement> = {};
+const setVideoRef = (id: string, el: unknown) => {
+  if (el) videoEls[id] = el as HTMLVideoElement;
+};
+
+const fmtDur = (s: number) =>
+  `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+
+// loadedmetadata：回填真实时长 + 横竖屏比例（比例到达后卡片宽度变化，需重算横向位移距离）
+const onVideoMeta = (id: string, e: Event) => {
+  const el = e.target as HTMLVideoElement;
+  const v = videos.value.find((x: VideoItem) => x.id === id);
+  if (!v) return;
+  if (el.duration && Number.isFinite(el.duration))
+    v.duration = fmtDur(el.duration);
+  if (el.videoWidth && el.videoHeight) {
+    v.ratio = el.videoWidth / el.videoHeight;
+    resizeWall();
+  }
+};
+
+// loadeddata：跳到片中一点，canvas 抽取封面帧（本地同源，不污染画布）
+// 8K/4K 视频按比例缩到最长边 1280 再截，避免生成超大画布/超大 dataURL
+const onVideoFrame = (id: string, e: Event) => {
+  const el = e.target as HTMLVideoElement;
+  const v = videos.value.find((x: VideoItem) => x.id === id);
+  if (!v || v.cover) return;
+  el.currentTime = Math.min(1.5, (el.duration || 2) * 0.2);
+  el.onseeked = () => {
+    el.onseeked = null;
+    try {
+      const c = document.createElement("canvas");
+      const scale = Math.min(1, 1280 / (el.videoWidth || 1280));
+      c.width = Math.round((el.videoWidth || 640) * scale);
+      c.height = Math.round((el.videoHeight || 360) * scale);
+      c.getContext("2d")!.drawImage(el, 0, 0, c.width, c.height);
+      v.cover = c.toDataURL("image/jpeg", 0.72);
+    } catch {
+      /* 截帧失败则保留视频默认画面 */
+    }
+  };
+};
+
+// 打开作品灯箱：视频播放 / 静态图放大
+const openWork = (v: VideoItem) => {
+  active.value = v;
+};
+
+// 卡片媒体框尺寸：横屏按宽限（高随比例），竖屏按高限（宽随比例），避免变形裁切
+const mediaStyle = (v: VideoItem) => {
+  return { height: "22rem" };
+};
+
+// ---- 纵向滚动驱动横向滚动（首尾水平居中）----
+const wallTrack = ref<HTMLElement | null>(null);
+const wallStage = ref<HTMLElement | null>(null);
+const wallStrip = ref<HTMLElement | null>(null);
+
+// 横向位移参数：起步时第一张卡片居中，滚动到底最后一张居中
+let wallT0 = 0;
+let wallTravel = 0;
+
+const resizeWall = () => {
+  const track = wallTrack.value;
+  const stage = wallStage.value;
+  const strip = wallStrip.value;
+  if (!track || !stage || !strip) return;
+  const vh = window.innerHeight;
+  const stageW = stage.clientWidth;
+  const stripW = strip.scrollWidth;
+  const cs = getComputedStyle(strip);
+  const padL = parseFloat(cs.paddingLeft) || 0;
+  const padR = parseFloat(cs.paddingRight) || 0;
+  const first = strip.firstElementChild as HTMLElement | null;
+  const last = strip.lastElementChild as HTMLElement | null;
+  const w1 = first ? first.offsetWidth : 0;
+  const wN = last ? last.offsetWidth : 0;
+
+  if (stripW <= stageW) {
+    // 内容不足一屏：整体居中，无需横向滚动
+    wallT0 = Math.max(0, (stageW - stripW) / 2);
+    wallTravel = 0;
+    track.style.height = `${vh + 2}px`;
+    paintWall();
+    return;
+  }
+
+  // 首卡居中所需位移（向右为正）
+  wallT0 = Math.max(0, stageW / 2 - (padL + w1 / 2));
+  // 末卡居中时条的左缘位置
+  const tend = stageW / 2 - (stripW - padR - wN / 2);
+  wallTravel = tend - wallT0; // 恒为负：从首卡居中滑向末卡居中
+  track.style.height = `${vh - wallTravel}px`;
+  paintWall();
+};
+
+const paintWall = () => {
+  const track = wallTrack.value;
+  const strip = wallStrip.value;
+  if (!track || !strip) return;
+  const rect = track.getBoundingClientRect();
+  const vh = window.innerHeight;
+  const total = rect.height - vh;
+  const progress = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
+  strip.style.transform = `translate3d(${(wallT0 + wallTravel * progress).toFixed(2)}px, 0, 0)`;
+};
+
+let wallRaf = 0;
+const onWallScroll = () => {
+  if (wallRaf) return;
+  wallRaf = requestAnimationFrame(() => {
+    wallRaf = 0;
+    paintWall();
+  });
+};
+
+onMounted(() => {
+  resizeWall();
+  window.addEventListener("scroll", onWallScroll, { passive: true });
+  window.addEventListener("resize", resizeWall);
+});
+onBeforeUnmount(() => {
+  window.removeEventListener("scroll", onWallScroll);
+  window.removeEventListener("resize", resizeWall);
+});
 
 // ---- 联系 ----
 const contactEmail = "1037111360@qq.com";
@@ -201,7 +390,7 @@ useSectionReveal();
   <section id="experience" class="container-page page-section experience">
     <header class="experience__head">
       <p class="experience__kicker">01 / THE PRACTITIONER</p>
-      <h1 class="experience__title">我在真实现场做过什么</h1>
+      <h1 class="experience__title">工作经历</h1>
       <!-- <p class="experience__subtitle">
         以设计师的眼光走入真实商业现场，让每一次定义都经由真实经验与成果发生。
       </p> -->
@@ -288,24 +477,61 @@ useSectionReveal();
     </ol>
   </section>
 
-  <!-- #projects：项目经历 -->
-  <section id="projects" class="container-page page-section">
-    <h1 class="page-title">项目经历</h1>
-    <p class="page-subtitle">代表性项目与作品。</p>
+  <!-- #projects：AIGC 创作（AIGC 视频墙，纵向滚动驱动横向位移） -->
+  <section
+    id="projects"
+    class="container-page page-section experience video-wall"
+  >
+    <div ref="wallTrack" class="video-wall__track">
+      <div ref="wallStage" class="video-wall__stage">
+        <header class="experience__head">
+          <p class="experience__kicker">02 / THE PROJECTS</p>
+          <h1 class="experience__title">AIGC 创作</h1>
+          <!-- <p class="experience__subtitle">
+            代表性项目与作品。
+          </p> -->
+          <span class="experience__bar" aria-hidden="true" />
+        </header>
 
-    <ol class="timeline">
-      <li
-        v-for="p in projects"
-        :key="p.period"
-        data-reveal
-        class="timeline__item"
-      >
-        <span class="timeline__dot" />
-        <p class="timeline__period">{{ p.period }}</p>
-        <h3 class="timeline__title">{{ p.role }} · {{ p.org }}</h3>
-        <p class="timeline__desc">{{ p.desc }}</p>
-      </li>
-    </ol>
+        <div ref="wallStrip" class="video-wall__strip">
+          <figure
+            v-for="v in videos"
+            :key="v.id"
+            class="vcard"
+            @click="openWork(v)"
+          >
+            <div class="vcard__media" :style="mediaStyle(v)">
+              <!-- 视频：预载元数据抽封面帧；静态图：直接展示原图 -->
+              <video
+                v-if="v.kind !== 'image'"
+                :ref="(el) => setVideoRef(v.id, el)"
+                :src="v.src"
+                preload="metadata"
+                muted
+                playsinline
+                @loadedmetadata="onVideoMeta(v.id, $event)"
+                @loadeddata="onVideoFrame(v.id, $event)"
+              />
+              <img
+                v-if="v.kind === 'image' || v.cover"
+                class="vcard__cover"
+                :src="v.kind === 'image' ? v.src : v.cover"
+                :alt="v.title"
+                loading="lazy"
+              />
+              <span v-if="v.kind !== 'image'" class="vcard__play">
+                <Icon name="mdi:play" :size="30" />
+              </span>
+              <span v-if="v.duration" class="vcard__dur">{{ v.duration }}</span>
+            </div>
+            <figcaption class="vcard__meta">
+              <span class="vcard__plat">{{ v.platform }}</span>
+              <h3 class="vcard__title">{{ v.title }}</h3>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- #contact：联系我 -->
@@ -368,6 +594,49 @@ useSectionReveal();
               前往主页
               <Icon name="mdi:open-in-new" :size="14" />
             </a> -->
+          </figcaption>
+        </figure>
+      </div>
+    </Transition>
+  </Teleport>
+
+  <!-- AIGC 作品灯箱：视频播放 / 静态图放大 -->
+  <Teleport to="body">
+    <Transition name="lightbox">
+      <div
+        v-if="active"
+        class="lightbox lightbox--video"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="active.title"
+        @click.self="active = null"
+      >
+        <button
+          type="button"
+          class="lightbox__close"
+          aria-label="关闭"
+          @click="active = null"
+        >
+          <Icon name="mdi:close" :size="22" />
+        </button>
+        <figure class="lightbox__frame lightbox__frame--video">
+          <video
+            v-if="active.kind !== 'image'"
+            :src="active.src"
+            class="lightbox__video"
+            controls
+            autoplay
+            playsinline
+          />
+          <img
+            v-else
+            :src="active.src"
+            :alt="active.title"
+            class="lightbox__video lightbox__still"
+          />
+          <figcaption class="lightbox__foot">
+            <span class="lightbox__name">{{ active.title }}</span>
+            <span class="lightbox__link">{{ active.platform }}</span>
           </figcaption>
         </figure>
       </div>
