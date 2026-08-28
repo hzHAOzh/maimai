@@ -114,24 +114,28 @@ const videos = ref<VideoItem[]>([
     src: "/media/videos/img-5412.mp4",
     title: "短片 · IMG_5412",
     platform: "横屏",
+    ratio: 16 / 9, // 7680×4320
   },
   {
     id: "v2",
     src: "/media/videos/img-5534.mp4",
     title: "短片 · IMG_5534",
     platform: "横屏",
+    ratio: 16 / 9, // 3840×2160
   },
   {
     id: "v3",
     src: "/media/videos/aigc-box.mp4",
     title: "AI 收纳好物 · 镜头一",
     platform: "竖屏",
+    ratio: 720 / 1280, // 0.5625
   },
   {
     id: "v4",
     src: "/media/videos/aigc-costume.mp4",
     title: "AI 变装 · 一键换装",
     platform: "竖屏",
+    ratio: 834 / 1112, // 0.75
   },
   {
     id: "w1",
@@ -179,25 +183,33 @@ const setVideoRef = (id: string, el: unknown) => {
 const fmtDur = (s: number) =>
   `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 
-// loadedmetadata：回填真实时长 + 横竖屏比例（比例到达后卡片宽度变化，需重算横向位移距离）
+// 用真实分辨率回填比例（仅当宽高可信时，避免 loadedmetadata 尚未解码出尺寸时算成 0/NaN）。
+// 比例到达后卡片宽度变化，需等 Vue 应用到内联样式再重算横向位移。
+const syncVideoRatio = (v: VideoItem, el: HTMLVideoElement) => {
+  if (!el.videoWidth || !el.videoHeight) return;
+  const r = el.videoWidth / el.videoHeight;
+  if (Math.abs(r - (v.ratio || 0)) < 0.001) return;
+  v.ratio = r;
+  nextTick(resizeWall);
+};
+
+// loadedmetadata：回填真实时长（比例改在 loadeddata 里回填，此时尺寸才可靠）
 const onVideoMeta = (id: string, e: Event) => {
   const el = e.target as HTMLVideoElement;
   const v = videos.value.find((x: VideoItem) => x.id === id);
   if (!v) return;
   if (el.duration && Number.isFinite(el.duration))
     v.duration = fmtDur(el.duration);
-  if (el.videoWidth && el.videoHeight) {
-    v.ratio = el.videoWidth / el.videoHeight;
-    resizeWall();
-  }
 };
 
-// loadeddata：跳到片中一点，canvas 抽取封面帧（本地同源，不污染画布）
+// loadeddata：回填比例 + 跳到片中一点，canvas 抽取封面帧（本地同源，不污染画布）
 // 8K/4K 视频按比例缩到最长边 1280 再截，避免生成超大画布/超大 dataURL
 const onVideoFrame = (id: string, e: Event) => {
   const el = e.target as HTMLVideoElement;
   const v = videos.value.find((x: VideoItem) => x.id === id);
-  if (!v || v.cover) return;
+  if (!v) return;
+  syncVideoRatio(v, el);
+  if (v.cover) return;
   el.currentTime = Math.min(1.5, (el.duration || 2) * 0.2);
   el.onseeked = () => {
     el.onseeked = null;
@@ -219,9 +231,23 @@ const openWork = (v: VideoItem) => {
   active.value = v;
 };
 
-// 卡片媒体框尺寸：横屏按宽限（高随比例），竖屏按高限（宽随比例），避免变形裁切
+// 静态图加载后读取真实宽高比对（避免被数据里硬编码的 16/9 裁剪），
+// 比例到达后卡片宽度变化，需重算横向位移距离
+const onImageLoad = (v: VideoItem, e: Event) => {
+  if (v.kind !== "image") return;
+  const el = e.target as HTMLImageElement;
+  if (el.naturalWidth && el.naturalHeight) {
+    v.ratio = el.naturalWidth / el.naturalHeight;
+    nextTick(resizeWall);
+  }
+};
+
+// 卡片媒体框尺寸：高度固定，宽度 = 高度 × 真实比例
+// 显式写死宽度，避免 .vcard (width:max-content) 下从比例解析不出确定宽度
 const mediaStyle = (v: VideoItem) => {
-  return { height: "22rem" };
+  const h = "min(56vh, 22rem)";
+  const r = v.ratio || 9 / 16;
+  return { height: h, width: `calc(${h} * ${r})` };
 };
 
 // ---- 纵向滚动驱动横向滚动（首尾水平居中）----
@@ -506,7 +532,7 @@ useSectionReveal();
                 v-if="v.kind !== 'image'"
                 :ref="(el) => setVideoRef(v.id, el)"
                 :src="v.src"
-                preload="metadata"
+                preload="auto"
                 muted
                 playsinline
                 @loadedmetadata="onVideoMeta(v.id, $event)"
@@ -518,6 +544,7 @@ useSectionReveal();
                 :src="v.kind === 'image' ? v.src : v.cover"
                 :alt="v.title"
                 loading="lazy"
+                @load="onImageLoad(v, $event)"
               />
               <span v-if="v.kind !== 'image'" class="vcard__play">
                 <Icon name="mdi:play" :size="30" />
